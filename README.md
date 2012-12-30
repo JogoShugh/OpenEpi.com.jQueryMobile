@@ -8,26 +8,17 @@ I've only tested with FireFox and Chrome so far. In FireFox, you should be able 
 
 # Technical Implementation
 
-Besides jQuery Mobile, the libraries used so far are:
+Besides [jQuery Mobile](http://jquerymobile.com/), the libraries used so far are:
 
-1. Knockback.js (Backbone.js + Knockout.js)
-2. Jade templating
-3. CoffeeScript
-4. toastr (for toast style messages)
-5. Nodefront for Jade "compilation" to HTML
+1. [RequireJS](http://requirejs.org) -- Asynchronous Module Definition (AMD)
+2. [Knockback.js](http://kmalakoff.github.com/knockback/) -- Backbone.js + Knockout.js) for magic bindings
+3. [Jade](http://jade-lang.com/) -- HTML templates
+4. [toastr](https://github.com/CodeSeven/toastr) -- toast style messages
+5. [CoffeeScript](http://coffeescript.org/) (love JS, but gotta have my caffeine now...)
+6. [Nodefront](http://karthikv.github.com/nodefront/) for Jade "compilation" to HTML
 
 # How to compile from source
 
 The app doesn't currently use Node.js to run, but you'll need to install Node.js and [Nodefront](http://karthikv.github.com/nodefront/) in order to "compile" the Jade into static HTML.
 
 Once you've installed that, you can type `nodefront compile` and it will regenerate index.html, etc from the jade files.
-
-
-
-
-
-
-
-
-
-
