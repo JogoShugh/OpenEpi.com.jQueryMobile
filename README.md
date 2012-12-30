@@ -6,6 +6,24 @@ This is a rough draft version of OpenEpi.com done with jQueryMobile, and a bunch
 
 I've only tested with FireFox and Chrome so far. In FireFox, you should be able to run `index.html` from a `file://` url, but in Chrome, you'll have to start chrome with `<pathtochrome>\chrome.exe --allow-file-access-from-files` to enable AJAX support from the file system. _(This is not optimal, so I will eventually not rely on this way of loading dynamic files)_
 
+# Screencast Walkthrough
+
+I have a rough draft screencast up also, 1 hour long: [OpenEpi.com.jQueryMobile Architecture](http://www.screencast.com/users/JoshGough/playlists/OpenEpi.com.jQueryMobile%20Architecture)
+It's divided into parts, mostly because I don't have my Jing registered yet :-D
+
+1. Introduction
+2. Technologies Overview
+3. Jade / Html Shell
+4. Module loading with RequireJS
+5. CoffeeScript/ JS Application Shell
+6. Wiring Up Components
+7. Dynamic Form Building with Jade Templates
+8. Creating a ViewModel from a Module's Input Fields
+9. Model to UI Binding Magic with Knockback and Friends
+10. Manipulating the Model and UI with Chrome's Debugger
+11. Lazy-Loading an External Module on a Button Click
+12. Thank You
+
 # Technical Implementation
 
 Besides [jQuery Mobile](http://jquerymobile.com/), the libraries used so far are:
