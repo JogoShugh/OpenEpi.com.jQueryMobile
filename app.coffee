@@ -34,8 +34,8 @@ define ['modules', 'templates'], (modules, templates) ->
       modulePage.find('.calculate').each ->
         command = $(@)
         command.unbind('click').bind 'click', ->
-          result = module.calculate(viewModel)
-          showResult result
+          result = module.calculate viewModel, (result) ->
+            showResult result
       $.mobile.changePage("#module")
 
   showResult = (result) ->  

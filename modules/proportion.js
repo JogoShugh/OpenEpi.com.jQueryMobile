@@ -29,7 +29,7 @@ define({
 		}
 	]
 	,
-	calculate: function(viewModel) { 
-		return viewModel.numerator() / viewModel.denominator(); 
+	calculate: function(viewModel, callback) { 
+		callback( viewModel.numerator() / viewModel.denominator() );
 	}
 });

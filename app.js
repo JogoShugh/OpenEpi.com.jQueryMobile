@@ -48,8 +48,9 @@
           command = $(this);
           return command.unbind('click').bind('click', function() {
             var result;
-            result = module.calculate(viewModel);
-            return showResult(result);
+            return result = module.calculate(viewModel, function(result) {
+              return showResult(result);
+            });
           });
         });
         return $.mobile.changePage("#module");
