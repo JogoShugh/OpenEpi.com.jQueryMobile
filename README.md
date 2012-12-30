@@ -14,11 +14,11 @@ Besides [jQuery Mobile](http://jquerymobile.com/), the libraries used so far are
 2. [Knockback.js](http://kmalakoff.github.com/knockback/) -- Backbone.js + Knockout.js) for magic bindings
 3. [Jade](http://jade-lang.com/) -- HTML templates
 4. [toastr](https://github.com/CodeSeven/toastr) -- toast style messages
-5. [CoffeeScript](http://coffeescript.org/) (love JS, but gotta have my caffeine now...)
-6. [Nodefront](http://karthikv.github.com/nodefront/) for Jade "compilation" to HTML
+5. [CoffeeScript](http://coffeescript.org/) -- _love JS, but gotta have my caffeine now..._
+6. [Nodefront](http://karthikv.github.com/nodefront/) -- for CoffeeScript and Jade "compilation" to JavaScript and static HTML
 
 # How to compile from source
 
-The app doesn't currently use Node.js to run, but you'll need to install Node.js and [Nodefront](http://karthikv.github.com/nodefront/) in order to "compile" the Jade into static HTML.
+The app doesn't currently use Node.js to run, but if you want to modify and compile the JavaScript and HTML you'll need to install [Node.js](http://nodejs.org/) and [Nodefront](http://karthikv.github.com/nodefront/) in order to "compile" the Jade into static HTML.
 
 Once you've installed that, you can type `nodefront compile` and it will regenerate index.html, etc from the jade files.
