@@ -4,7 +4,7 @@ This is a rough draft at a version of OpenEpi.com done with jQueryMobile, and a 
 
 # How to run
 
-I've only tested with FireFox and Chrome so far. In FireFox, you should be able to run from file:///, but in Chrome, you'll have to start chrome with `<pathtochrome>\chrome.exe --allow-file-access-from-files` to enable AJAX support from the file system. _(This is not optimal, so I will eventually not rely on this way of loading dynamic files)_
+I've only tested with FireFox and Chrome so far. In FireFox, you should be able to run `index.html` from a `file://` url, but in Chrome, you'll have to start chrome with `<pathtochrome>\chrome.exe --allow-file-access-from-files` to enable AJAX support from the file system. _(This is not optimal, so I will eventually not rely on this way of loading dynamic files)_
 
 # Technical Implementation
 
