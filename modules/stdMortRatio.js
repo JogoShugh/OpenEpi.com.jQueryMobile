@@ -1,4 +1,4 @@
-{
+define({
 	name:'StdMortRatio',
 	group:'Counts',
 	title: 'Standardized Mortality Ratio',
@@ -30,4 +30,4 @@
 	calculate: function(viewModel) { 
 		return viewModel.observedNumberOfCases() * viewModel.expectedNumberOfCases();
 	}
-}
+});

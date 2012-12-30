@@ -1,4 +1,4 @@
-{
+define({
 	name:'Proportion',
 	group:'Sample Size',
 	title: 'Simple Proportion',
@@ -32,4 +32,4 @@
 	calculate: function(viewModel) { 
 		return viewModel.numerator() / viewModel.denominator(); 
 	}
-}
+});
