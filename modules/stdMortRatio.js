@@ -29,8 +29,10 @@ define(['require'],	function(require) {
 			]
 			,
 			calculate: function(viewModel, callback) { 
-				require(['modules/myScript'], function(myScript) {
-					callback(myScript.message + (viewModel.observedNumberOfCases() * viewModel.expectedNumberOfCases()));
+				require(['modules/bigFatPowerAlgorithm'], function(bigFatPowerAlgorithm) {
+					var result = bigFatPowerAlgorithm.execute(
+						viewModel.observedNumberOfCases(), viewModel.expectedNumberOfCases());
+					callback(result);
 				});
 			}
 		};

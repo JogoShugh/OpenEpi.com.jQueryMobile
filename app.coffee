@@ -25,7 +25,8 @@ define ['modules', 'templates'], (modules, templates) ->
         html = $.jade(tmpl, field)
         fieldContainer.append(html)
         fieldContainer.find("[data-id='#{field.id}']").each ->
-          $(@)[field.jqmType]() # fortify the DOM element with jQuery goodness
+          if field.jqmType?
+            $(@)[field.jqmType]() # fortify the DOM element with jQuery goodness
       model = new Backbone.Model(viewModelData) # Backbonify, Knockbackitize, and TKO
       viewModel = kb.viewModel(model)
       ko.applyBindings(viewModel, @)

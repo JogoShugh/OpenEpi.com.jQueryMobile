@@ -37,7 +37,9 @@
           html = $.jade(tmpl, field);
           fieldContainer.append(html);
           fieldContainer.find("[data-id='" + field.id + "']").each(function() {
-            return $(this)[field.jqmType]();
+            if (field.jqmType != null) {
+              return $(this)[field.jqmType]();
+            }
           });
         }
         model = new Backbone.Model(viewModelData);
