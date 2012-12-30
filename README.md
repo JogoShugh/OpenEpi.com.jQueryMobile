@@ -41,7 +41,8 @@ This is just a prototype. Some things on my mind:
 
 1. Using proper Backbone concepts, like [Views](http://backbonejs.org/#View) and [Routers](http://backbonejs.org/#Router), etc
 2. [Backbone Forms](https://github.com/powmedia/backbone-forms) looks better than my home-rolled `inputFields` approach.
-3. Does it actually need Knockback? Not really sure yet...
+3. Using [Backbone.sync for localStorage](http://documentcloud.github.com/backbone/docs/backbone-localstorage.html) to allow saving of form inputs to `localStorage`, and potentially to backend servers as well.
+4. Does it actually need Knockback? Not really sure yet...
 
 # How to compile from source
 
