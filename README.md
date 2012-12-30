@@ -1,6 +1,6 @@
 # Summary
 
-This is a rough draft version of OpenEpi.com done with jQueryMobile, and a bunch of other popular and powerful open-source libraries.
+This is a rough draft version of [OpenEpi.com](http://www.openepi.com) done with jQueryMobile, and a bunch of other popular and powerful open-source libraries.
 
 # How to run
 
