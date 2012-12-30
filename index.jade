@@ -20,6 +20,8 @@ html(lang='en')
     script(src='Scripts/coffee-script.js', type='text/javascript')
 
   body
+    script(src='moduleLinks.js', type='text/javascript')
+
     div(data-role='page', id='splash')
       div(data-role='content', style='text-align:center;background:#ffffff;')
         div
@@ -28,27 +30,7 @@ html(lang='en')
           img(src='content/images/splash.png', style="width:216px;height:287px")
 
     div(data-role='page', id='home')
-      div(data-role='content', data-theme='b')
-        include modules
-        ul(
-         data-role="listview"
-         data-filter="true"
-         data-filter-placeholder="Search for module..."
-         ).moduleList
-          moduleGroup = ''
-          for module, moduleName in modules
-            name = moduleName.replace(/ /g, '')
-            currentGroup = module.group
-            if currentGroup != moduleGroup
-              moduleGroup = currentGroup
-              li(data-role='list-divider')=moduleGroup
-            li(data-theme='d', data-moduleName=moduleName).moduleItem
-              a(href="#", style='padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;', data-moduleName=moduleName)
-                span=module.titleShort
-          li(data-role='list-divider')='Hard Coded Testing Group'
-          li(data-moduleName='ErrorNotFound', data-theme='d').moduleItem 
-              a(href="#", style='padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;', data-moduleName='ErrorNotFound')
-                span Should pop up an error
+      div(data-role='content', data-theme='b', id='moduleSelector')
 
     div(data-role='page', id='module')
       include moduleHeader

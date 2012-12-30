@@ -1,0 +1,20 @@
+ul(
+ data-role="listview"
+ data-filter="true"
+ data-filter-placeholder="Search for module..."
+ id='moduleList'
+ ).moduleList
+  moduleGroup = ''
+  for module, moduleName in modules
+    name = moduleName.replace(/ /g, '')
+    currentGroup = module.group
+    if currentGroup != moduleGroup
+      moduleGroup = currentGroup
+      li(data-role='list-divider')=moduleGroup
+    li(data-theme='d', data-moduleName=moduleName).moduleItem
+      a(href="#", style='padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;', data-moduleName=moduleName)
+        span=module.titleShort
+  li(data-role='list-divider')='Hard Coded Testing Group'
+  li(data-moduleName='ErrorNotFound', data-theme='d').moduleItem 
+      a(href="#", style='padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;', data-moduleName='ErrorNotFound')
+        span Should pop up an error

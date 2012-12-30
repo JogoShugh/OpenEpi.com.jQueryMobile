@@ -1,29 +1,63 @@
 templates = {}
+modules = {}
 
 fetchInputFieldTemplates = (callback) ->
-  #templates = $("[class='field-tmpl']")
-  templateNames = ['input-text-tmpl']
+  templateNames = ['input-text-tmpl', 'display-moduleList-tmpl']
   count = templateNames.length
-  for templateName in templateNames
-    src = 'templates/' + templateName + '.jade'
-    $.ajax(src, {dataType:'text'})    
+  for i in [0..templateNames.length - 1]
+    # This is a little tricky here...
+    # The reason we need to define a closure is that the value of templateName must be closed
+    # from the iteration value. Otherwise, by the time the async callback function inside
+    # of each 'done' call executes, the value of currentTemplateName is always the LAST
+    # name, which results in nothing good.
+    # 
+    # So, by closing it into a function, and then immediately calling it, everything works out fine
+    getTemplate = ->
+      currentTemplateName = templateNames[i]
+      src = 'templates/' + currentTemplateName + '.jade'
+      $.ajax(src, {dataType:'text'})    
+        .done (data) ->
+          templates[currentTemplateName] = data
+          count--
+          if count == 0
+            callback()
+        .fail (ex) ->
+          count--
+          error "Error loading input field templates in fetchInputFieldTemplates: " + ex        
+          if count == 0
+            callback()
+    getTemplate()
+
+bindModuleLinks = (callback) ->
+  count = moduleLinks._links.modules.length
+  totalCount = count
+  successCount = 0
+  for moduleLink in moduleLinks._links.modules
+    $.ajax(moduleLink.href, {dataType:'text'})
       .done (data) ->
-        templates[templateName] = data
+        eval('module = ' + data) # yes, eval :-D
+        name = module.name
+        modules[name] = module
         count--
+        successCount++
         if count == 0
+          info "Loaded #{successCount} of #{totalCount} modules correctly...", {timeOut:1000}
           callback()
       .fail (ex) ->
         count--
+        error "Error loading module definition for module named #{moduleLink.id}: " + ex
         if count == 0
+          info "Loaded #{successCount} of #{totalCount} modules correctly...", {timeOut:1000}        
           callback()
-        error "Error loading input field templates in fetchInputFieldTemplates: " + ex
 
-bindModuleLinks = () ->
-  $('.moduleItem a').each ->
-    item = $(@)
-    moduleName = item.attr('data-moduleName')
-    item.bind 'click', ->
-      moduleLoad moduleName
+renderModuleLinks = ->
+  moduleSelector = $("#moduleSelector")
+  tmpl = templates['display-moduleList-tmpl']
+  html = $.jade(tmpl, {modules:modules});
+  moduleSelector.append(html);
+  moduleList = $("#moduleList")
+  #moduleList.listview()
+  #moduleList.listview('refresh')
 
 moduleLoad = (moduleName) ->
   modulePage = $("#module")
@@ -88,14 +122,23 @@ showResult = (result) ->
   ,
     1000
 
+info = (message, options) ->
+  toastr.info message, options
+
 error = (message) ->
   toastr.error message
   console.log 'OpenEpi Error:' + message  
 
 $ ->
   fetchInputFieldTemplates ->
-    bindModuleLinks()
-    window.setTimeout ->
-      $.mobile.changePage "#home"
-    , 
-      1750
+    bindModuleLinks ->
+      renderModuleLinks()
+      $('.moduleItem a').each ->        
+        item = $(@)
+        moduleName = item.attr('data-moduleName')
+        item.bind 'click', ->
+          moduleLoad moduleName    
+      window.setTimeout ->
+        $.mobile.changePage "#home"
+      , 
+        1750

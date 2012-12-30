@@ -1,42 +1,88 @@
 (function() {
-  var bindModuleLinks, error, fetchInputFieldTemplates, moduleLoad, showResult, templates;
+  var bindModuleLinks, error, fetchInputFieldTemplates, info, moduleLoad, modules, renderModuleLinks, showResult, templates;
 
   templates = {};
 
+  modules = {};
+
   fetchInputFieldTemplates = function(callback) {
-    var count, src, templateName, templateNames, _i, _len, _results;
-    templateNames = ['input-text-tmpl'];
+    var count, getTemplate, i, templateNames, _i, _ref, _results;
+    templateNames = ['input-text-tmpl', 'display-moduleList-tmpl'];
     count = templateNames.length;
     _results = [];
-    for (_i = 0, _len = templateNames.length; _i < _len; _i++) {
-      templateName = templateNames[_i];
-      src = 'templates/' + templateName + '.txt';
-      _results.push($.ajax(src).done(function(data) {
-        templates[templateName] = data;
+    for (i = _i = 0, _ref = templateNames.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      getTemplate = function() {
+        var currentTemplateName, src;
+        currentTemplateName = templateNames[i];
+        src = 'templates/' + currentTemplateName + '.jade';
+        return $.ajax(src, {
+          dataType: 'text'
+        }).done(function(data) {
+          templates[currentTemplateName] = data;
+          count--;
+          if (count === 0) {
+            return callback();
+          }
+        }).fail(function(ex) {
+          count--;
+          error("Error loading input field templates in fetchInputFieldTemplates: " + ex);
+          if (count === 0) {
+            return callback();
+          }
+        });
+      };
+      _results.push(getTemplate());
+    }
+    return _results;
+  };
+
+  bindModuleLinks = function(callback) {
+    var count, moduleLink, successCount, totalCount, _i, _len, _ref, _results;
+    count = moduleLinks._links.modules.length;
+    totalCount = count;
+    successCount = 0;
+    _ref = moduleLinks._links.modules;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      moduleLink = _ref[_i];
+      _results.push($.ajax(moduleLink.href, {
+        dataType: 'text'
+      }).done(function(data) {
+        var name;
+        eval('module = ' + data);
+        name = module.name;
+        modules[name] = module;
         count--;
+        successCount++;
         if (count === 0) {
+          info("Loaded " + successCount + " of " + totalCount + " modules correctly...", {
+            timeOut: 1000
+          });
           return callback();
         }
       }).fail(function(ex) {
         count--;
+        error(("Error loading module definition for module named " + moduleLink.id + ": ") + ex);
         if (count === 0) {
-          callback();
+          info("Loaded " + successCount + " of " + totalCount + " modules correctly...", {
+            timeOut: 1000
+          });
+          return callback();
         }
-        return error("Error loading input field templates in fetchInputFieldTemplates: " + ex);
       }));
     }
     return _results;
   };
 
-  bindModuleLinks = function() {
-    return $('.moduleItem a').each(function() {
-      var item, moduleName;
-      item = $(this);
-      moduleName = item.attr('data-moduleName');
-      return item.bind('click', function() {
-        return moduleLoad(moduleName);
-      });
+  renderModuleLinks = function() {
+    var html, moduleList, moduleSelector, tmpl;
+    moduleSelector = $("#moduleSelector");
+    tmpl = templates['display-moduleList-tmpl'];
+    html = $.jade(tmpl, {
+      modules: modules
     });
+    moduleSelector.append(html);
+    return moduleList = $("#moduleList");
   };
 
   moduleLoad = function(moduleName) {
@@ -101,6 +147,10 @@
     }, 1000);
   };
 
+  info = function(message, options) {
+    return toastr.info(message, options);
+  };
+
   error = function(message) {
     toastr.error(message);
     return console.log('OpenEpi Error:' + message);
@@ -108,10 +158,20 @@
 
   $(function() {
     return fetchInputFieldTemplates(function() {
-      bindModuleLinks();
-      return window.setTimeout(function() {
-        return $.mobile.changePage("#home");
-      }, 1750);
+      return bindModuleLinks(function() {
+        renderModuleLinks();
+        $('.moduleItem a').each(function() {
+          var item, moduleName;
+          item = $(this);
+          moduleName = item.attr('data-moduleName');
+          return item.bind('click', function() {
+            return moduleLoad(moduleName);
+          });
+        });
+        return window.setTimeout(function() {
+          return $.mobile.changePage("#home");
+        }, 1750);
+      });
     });
   });
 
