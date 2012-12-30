@@ -35,6 +35,14 @@ It's divided into parts, mostly because I don't have my Jing registered yet :-D
 11. Lazy-Loading an External Module on a Button Click
 12. Thank You
 
+# Next Steps
+
+This is just a prototype. Some things on my mind:
+
+1. Using proper Backbone concepts, like [Views](http://backbonejs.org/#View) and [Routers](http://backbonejs.org/#Router), etc
+2. [Backbone Forms](https://github.com/powmedia/backbone-forms) looks better than my home-rolled `inputFields` approach.
+3. Does it actually need Knockback? Not really sure yet...
+
 # How to compile from source
 
 The app doesn't currently use Node.js to run, but if you want to modify and compile the JavaScript and HTML you'll need to install [Node.js](http://nodejs.org/) and [Nodefront](http://karthikv.github.com/nodefront/) in order to "compile" the Jade into static HTML.
