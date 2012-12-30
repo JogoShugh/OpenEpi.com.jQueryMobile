@@ -11,7 +11,7 @@ I've only tested with FireFox and Chrome so far. In FireFox, you should be able 
 Besides [jQuery Mobile](http://jquerymobile.com/), the libraries used so far are:
 
 1. [RequireJS](http://requirejs.org) -- Asynchronous Module Definition (AMD)
-2. [Knockback.js](http://kmalakoff.github.com/knockback/) -- Backbone.js + Knockout.js) for magic bindings
+2. [Knockback.js](http://kmalakoff.github.com/knockback/) -- Backbone.js + Knockout.js for magic bindings
 3. [Jade](http://jade-lang.com/) -- HTML templates
 4. [toastr](https://github.com/CodeSeven/toastr) -- toast style messages
 5. [CoffeeScript](http://coffeescript.org/) -- _love JS, but gotta have my caffeine now..._
