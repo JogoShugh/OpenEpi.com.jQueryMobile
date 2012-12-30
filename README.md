@@ -22,10 +22,6 @@ The app doesn't currently use Node.js to run, but you'll need to install Node.js
 
 Once you've installed that, you can type `nodefront compile` and it will regenerate index.html, etc from the jade files.
 
-There's a little hack right now also which requires running `. ./mini.sh` to regenerate the modules.jade file. And, you have to remove `var` from the file by hand and the trailing statement after the minified object. I plan to dynamically render the module list, however, so this will go away soon.
-
-
-
 
 
 
