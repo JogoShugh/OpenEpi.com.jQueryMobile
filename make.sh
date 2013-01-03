@@ -1,4 +1,6 @@
 nodefront compile
-cd modules
+cd scripts
+nodefront compile
+cd ../modules
 nodefront compile
 cd ..

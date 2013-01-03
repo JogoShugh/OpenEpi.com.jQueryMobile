@@ -1,43 +1,84 @@
-define ['modules', 'templates'], (modules, templates) ->
+define [
+    'modules', 
+    'templates',
+    'backbone',
+    'backbone-forms',
+    'underscore',
+    'toastr',
+    'jquery',
+    'jquery.mobile',
+    'jquery.jade'
+], 
+(
+    modules, 
+    templates,
+    Backbone,
+    bbforms,
+    _,
+    toastr,
+    $,
+    jqm,
+    jade
+) ->
   renderModuleLinks = ->
     info "Loaded all modules successfully...", {timeOut:1000}        
     moduleSelector = $("#moduleSelector")
     tmpl = templates['display-moduleList']
-    html = $.jade(tmpl, {modules:modules})
+    mods = new Object()
+    mods.modules = modules
+    html = $.jade(tmpl, mods)
     moduleSelector.append(html)
 
   moduleLoad = (moduleName) ->
     modulePage = $("#module")
-    module = modules[moduleName]
+    module = getModule moduleName
     if not module?
-      error "Could not find module #{moduleName}"
+      return      
+    moduleModel = getModuleModel module
+    if not moduleModel?
       return
+
     $("#resultsMissing").show()
     $("#resultsPane").hide()
-    modulePage.find('.fields').each ->
+    modulePage.find('.fields').each ->      
       fieldContainer = $(@)
       fieldContainer.empty()
-      viewModelData = {} # for raw property values to feed the viewModel monster
-      fields = module.inputFields
-      for field in fields
-        viewModelData[field.id] = field.defaultValue
-        tmpl = templates['input-' + field.type]
-        html = $.jade(tmpl, field)
-        fieldContainer.append(html)
-        fieldContainer.find("[data-id='#{field.id}']").each ->
-          if field.jqmType?
-            $(@)[field.jqmType]() # fortify the DOM element with jQuery goodness
-      model = new Backbone.Model(viewModelData) # Backbonify, Knockbackitize, and TKO
-      viewModel = kb.viewModel(model)
-      ko.applyBindings(viewModel, @)
+      
+      model = new moduleModel
+      form = new Backbone.Form(model: model).render()
+      fieldContainer.html(form.el)
+
+      window.CurrentModule = module
+      window.CurrentModel = model # I know, evil...
+
       # Finallly, rebind the click handler for the "Calculate" button and
       # attach it to the calculate method of the current module
       modulePage.find('.calculate').each ->
         command = $(@)
         command.unbind('click').bind 'click', ->
-          result = module.calculate viewModel, (result) ->
+          formValue = form.getValue()
+          console.log formValue
+          result = module.calculate formValue, (result) ->
             showResult result
+
       $.mobile.changePage("#module")
+      modulePage.trigger('create'); # enhance the controls, JQM style
+
+  moduleModels = {}
+
+  getModule = (moduleName) ->
+    module = modules[moduleName]
+    if not module?
+      error "Could not find module #{moduleName}"
+      return null
+    return module  
+
+  getModuleModel = (module) ->
+    moduleModel = moduleModels[module.name]
+    if not moduleModel?
+      moduleModel = Backbone.Model.extend(schema: module.inputFields)
+      moduleModels[module.name] = moduleModel
+    return moduleModel
 
   showResult = (result) ->  
     resultPage = $("#results")
@@ -52,7 +93,7 @@ define ['modules', 'templates'], (modules, templates) ->
       drumRoll.fadeOut().promise().done ->
         resultData.html(result)
         resultData.fadeIn()
-    , 1000
+    , 100
 
   info = (message, options) ->
     toastr.info message, options

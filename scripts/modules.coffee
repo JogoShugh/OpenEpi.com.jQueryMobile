@@ -1,6 +1,7 @@
 define [
-	'modules/stdMortRatio',
-	'modules/proportion'
+	'../modules/stdMortRatio',
+	'../modules/add',
+	'../modules/proportion'
 ]
 , (args...) -> 
 	modules = {}

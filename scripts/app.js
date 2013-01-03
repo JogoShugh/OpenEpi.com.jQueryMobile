@@ -1,62 +1,79 @@
 (function() {
 
-  define(['modules', 'templates'], function(modules, templates) {
-    var error, info, moduleLoad, renderModuleLinks, showResult;
+  define(['modules', 'templates', 'backbone', 'backbone-forms', 'underscore', 'toastr', 'jquery', 'jquery.mobile', 'jquery.jade'], function(modules, templates, Backbone, bbforms, _, toastr, $, jqm, jade) {
+    var error, getModule, getModuleModel, info, moduleLoad, moduleModels, renderModuleLinks, showResult;
     renderModuleLinks = function() {
-      var html, moduleSelector, tmpl;
+      var html, mods, moduleSelector, tmpl;
       info("Loaded all modules successfully...", {
         timeOut: 1000
       });
       moduleSelector = $("#moduleSelector");
       tmpl = templates['display-moduleList'];
-      html = $.jade(tmpl, {
-        modules: modules
-      });
+      mods = new Object();
+      mods.modules = modules;
+      html = $.jade(tmpl, mods);
       return moduleSelector.append(html);
     };
     moduleLoad = function(moduleName) {
-      var module, modulePage;
+      var module, moduleModel, modulePage;
       modulePage = $("#module");
-      module = modules[moduleName];
+      module = getModule(moduleName);
       if (!(module != null)) {
-        error("Could not find module " + moduleName);
+        return;
+      }
+      moduleModel = getModuleModel(module);
+      if (!(moduleModel != null)) {
         return;
       }
       $("#resultsMissing").show();
       $("#resultsPane").hide();
       return modulePage.find('.fields').each(function() {
-        var field, fieldContainer, fields, html, model, tmpl, viewModel, viewModelData, _i, _len;
+        var fieldContainer, form, model;
         fieldContainer = $(this);
         fieldContainer.empty();
-        viewModelData = {};
-        fields = module.inputFields;
-        for (_i = 0, _len = fields.length; _i < _len; _i++) {
-          field = fields[_i];
-          viewModelData[field.id] = field.defaultValue;
-          tmpl = templates['input-' + field.type];
-          html = $.jade(tmpl, field);
-          fieldContainer.append(html);
-          fieldContainer.find("[data-id='" + field.id + "']").each(function() {
-            if (field.jqmType != null) {
-              return $(this)[field.jqmType]();
-            }
-          });
-        }
-        model = new Backbone.Model(viewModelData);
-        viewModel = kb.viewModel(model);
-        ko.applyBindings(viewModel, this);
+        model = new moduleModel;
+        form = new Backbone.Form({
+          model: model
+        }).render();
+        fieldContainer.html(form.el);
+        window.CurrentModule = module;
+        window.CurrentModel = model;
         modulePage.find('.calculate').each(function() {
           var command;
           command = $(this);
           return command.unbind('click').bind('click', function() {
-            var result;
-            return result = module.calculate(viewModel, function(result) {
+            var formValue, result;
+            formValue = form.getValue();
+            console.log(formValue);
+            return result = module.calculate(formValue, function(result) {
               return showResult(result);
             });
           });
         });
-        return $.mobile.changePage("#module");
+        $.mobile.changePage("#module");
+        return modulePage.trigger('create');
       });
+    };
+    moduleModels = {};
+    getModule = function(moduleName) {
+      var module;
+      module = modules[moduleName];
+      if (!(module != null)) {
+        error("Could not find module " + moduleName);
+        return null;
+      }
+      return module;
+    };
+    getModuleModel = function(module) {
+      var moduleModel;
+      moduleModel = moduleModels[module.name];
+      if (!(moduleModel != null)) {
+        moduleModel = Backbone.Model.extend({
+          schema: module.inputFields
+        });
+        moduleModels[module.name] = moduleModel;
+      }
+      return moduleModel;
     };
     showResult = function(result) {
       var drumRoll, resultData, resultPage;
@@ -73,7 +90,7 @@
           resultData.html(result);
           return resultData.fadeIn();
         });
-      }, 1000);
+      }, 100);
     };
     info = function(message, options) {
       return toastr.info(message, options);

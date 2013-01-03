@@ -3,13 +3,13 @@
 
   (function() {
     var name, templateInsaneNames, templateNames;
-    templateNames = ["input-text", "display-moduleList"];
+    templateNames = ["input-text", "display-moduleList", "input-textarea"];
     templateInsaneNames = (function() {
       var _i, _len, _results;
       _results = [];
       for (_i = 0, _len = templateNames.length; _i < _len; _i++) {
         name = templateNames[_i];
-        _results.push("text!templates/" + name + ".jade");
+        _results.push("text!../templates/" + name + ".jade");
       }
       return _results;
     })();
