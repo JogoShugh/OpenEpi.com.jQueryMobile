@@ -1,7 +1,7 @@
 (function() {
   var __slice = [].slice;
 
-  define(['../modules/stdMortRatio', '../modules/add', '../modules/proportion'], function() {
+  define(['../modules/stdMortRatio', '../modules/ciMedian', '../modules/proportion'], function() {
     var args, module, modules, _i, _len;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     modules = {};

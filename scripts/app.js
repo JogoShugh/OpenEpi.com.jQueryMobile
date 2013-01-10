@@ -42,12 +42,12 @@
           var command;
           command = $(this);
           return command.unbind('click').bind('click', function() {
-            var formValue, result;
+            var formValue;
             formValue = form.getValue();
             console.log(formValue);
-            return result = module.calculate(formValue, function(result) {
-              return showResult(result);
-            });
+            return module.calculate(formValue, function(result) {
+              return showResult(result, module.render);
+            }, error);
           });
         });
         $.mobile.changePage("#module");
@@ -75,7 +75,7 @@
       }
       return moduleModel;
     };
-    showResult = function(result) {
+    showResult = function(result, renderFn) {
       var drumRoll, resultData, resultPage;
       resultPage = $("#results");
       resultData = $("#resultData");
@@ -87,8 +87,14 @@
       $.mobile.changePage("#results");
       return window.setTimeout(function() {
         return drumRoll.fadeOut().promise().done(function() {
-          resultData.html(result);
-          return resultData.fadeIn();
+          var completeRender;
+          completeRender = function(html) {
+            resultData.empty();
+            resultData.append(html);
+            return resultData.fadeIn();
+          };
+          renderFn(result, completeRender, error);
+          return 'el = $("<div style=\'padding:3px;border:1px solid darkgray;\'></div>")\nfor key, value of result.model\n  el.append("<div><b>#{key}:</b> #{value}</div>")';
         });
       }, 100);
     };
@@ -100,6 +106,13 @@
       return console.log('OpenEpi Error:' + message);
     };
     return $(function() {
+      $("#popupPanel").on({
+        popupbeforeposition: function() {
+          var h;
+          h = $(window).height();
+          return $("#popupPanel").css("height", h);
+        }
+      });
       renderModuleLinks();
       $('.moduleItem a').each(function() {
         var item, moduleName;

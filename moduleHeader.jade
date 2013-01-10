@@ -1,7 +1,14 @@
 div(data-role='header', data-position='fixed', data-theme='a')
-  div(data-role='navbar', data-iconpos='left')
-    ul		
-      li
-        a(href='#module', data-icon='grid') Enter
-      li
-        a(href='#results', data-icon='arrow-r') results
+	div(data-role='navbar', data-iconpos='left')
+		ul		
+			li
+				a(href='#module', data-icon='grid') Enter
+			li
+				a(href='#results', data-icon='arrow-r') results
+			li
+				a(href="#popupPanel", data-rel="popup", data-transition="slide", data-position-to="window", data-role="button") Options
+
+	div(data-role='popup', id='popupPanel', data-corners='false', data-theme'none', data-shadow='false', data-tolerance='0,0')
+		button(data-theme="a", data-icon="back", data-mini="true") Back
+		button(data-theme="a", data-icon="grid", data-mini="true") Menu
+		button(data-theme="a", data-icon="search", data-mini="true") Search

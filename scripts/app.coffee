@@ -58,8 +58,9 @@ define [
         command.unbind('click').bind 'click', ->
           formValue = form.getValue()
           console.log formValue
-          result = module.calculate formValue, (result) ->
-            showResult result
+          module.calculate formValue, (result) ->
+            showResult result, module.render
+          , error
 
       $.mobile.changePage("#module")
       modulePage.trigger('create'); # enhance the controls, JQM style
@@ -80,7 +81,7 @@ define [
       moduleModels[module.name] = moduleModel
     return moduleModel
 
-  showResult = (result) ->  
+  showResult = (result, renderFn) ->  
     resultPage = $("#results")
     resultData = $("#resultData")
     drumRoll = $("#drumRoll")
@@ -91,8 +92,16 @@ define [
     $.mobile.changePage("#results")  
     window.setTimeout ->
       drumRoll.fadeOut().promise().done ->
-        resultData.html(result)
-        resultData.fadeIn()
+        completeRender = (html) ->
+          resultData.empty()
+          resultData.append(html)
+          resultData.fadeIn()
+        renderFn(result, completeRender, error)
+        '''
+        el = $("<div style='padding:3px;border:1px solid darkgray;'></div>")
+        for key, value of result.model
+          el.append("<div><b>#{key}:</b> #{value}</div>")
+        '''
     , 100
 
   info = (message, options) ->
@@ -103,6 +112,11 @@ define [
     console.log 'OpenEpi Error:' + message  
 
   $ ->
+    $("#popupPanel").on
+      popupbeforeposition: ->
+        h = $(window).height()
+        $("#popupPanel").css("height", h)
+        
     renderModuleLinks()
     $('.moduleItem a').each ->        
       item = $(@)

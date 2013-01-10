@@ -1,6 +1,6 @@
 define [
 	'../modules/stdMortRatio',
-	'../modules/add',
+	'../modules/ciMedian',
 	'../modules/proportion'
 ]
 , (args...) -> 
