@@ -1,4 +1,4 @@
-define ->	
+define ->
 	name:'ConfidenceInterval',
 	group:'Continuous Variables',
 	title: 'Confidence Interval',
@@ -96,6 +96,7 @@ should be within 1-100%",
 
 		resultModel = 
 			model: model
+			fields: @.inputFields
 			n: n
 			median: median
 			pt: pt
@@ -107,11 +108,11 @@ should be within 1-100%",
 
 		callback resultModel
 
-	render: (result, callback, error) ->
-		el = $("<div></div>")
+	render: (result, callback, error) =>
+		el = $("<div style='text-align:center'></div>")
 		heading = "<h3>Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}</h3>"
 		el.append(heading)
-		grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray;'></div>")
+		grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray; background: #ffffff;'></div>")
 		grid.append("<div class='ui-block-a' style='background:lightgray'>Method</div>")
 		grid.append("<div class='ui-block-b' style='background:lightgray'>Lower Limit</div>")
 		grid.append("<div class='ui-block-c' style='background:lightgray'>Rank</div>")
@@ -119,10 +120,14 @@ should be within 1-100%",
 		grid.append("<div class='ui-block-a'>Normal Approximation</div>")
 		grid.append("<div class='ui-block-b'>#{result.lowerLimit}</div>")
 		grid.append("<div class='ui-block-c'>#{result.rank}</div>")
-		grid.append("<div class='ui-block-d'>#{result.upperLimit}</div>")		
+		grid.append("<div class='ui-block-d'>#{result.upperLimit}</div>")
 		el.append(grid)
+		el.append("<h4>Input Data</h4>")
+		inputs = $("<div id='#inputs' data-role='collapsible' data-collapsed='true' style='background:#fcfcfc; padding:3px;border:1px solid darkgray;'></div>")
+		for key, value of result.model
+			inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;'><b>#{result.fields[key].label}:</b></span><span style='display:table-cell;'>#{value}</span></div>")
+		el.append(inputs)
 		callback(el)
-
 '''
 
         tableGenerationFunc: function () {

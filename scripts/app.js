@@ -76,27 +76,26 @@
       return moduleModel;
     };
     showResult = function(result, renderFn) {
-      var drumRoll, resultData, resultPage;
+      var processing, resultData, resultPage;
       resultPage = $("#results");
       resultData = $("#resultData");
-      drumRoll = $("#drumRoll");
+      processing = $("#processing");
       resultData.hide();
-      drumRoll.show();
+      processing.show();
       $("#resultsMissing").hide();
       $("#resultsPane").show();
       $.mobile.changePage("#results");
       return window.setTimeout(function() {
-        return drumRoll.fadeOut().promise().done(function() {
+        return processing.fadeOut().promise().done(function() {
           var completeRender;
           completeRender = function(html) {
             resultData.empty();
             resultData.append(html);
-            return resultData.fadeIn();
+            return resultData.fadeIn(200);
           };
-          renderFn(result, completeRender, error);
-          return 'el = $("<div style=\'padding:3px;border:1px solid darkgray;\'></div>")\nfor key, value of result.model\n  el.append("<div><b>#{key}:</b> #{value}</div>")';
+          return renderFn(result, completeRender, error);
         });
-      }, 100);
+      }, 200);
     };
     info = function(message, options) {
       return toastr.info(message, options);

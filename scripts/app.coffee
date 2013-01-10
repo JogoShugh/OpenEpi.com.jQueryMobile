@@ -84,25 +84,20 @@ define [
   showResult = (result, renderFn) ->  
     resultPage = $("#results")
     resultData = $("#resultData")
-    drumRoll = $("#drumRoll")
+    processing = $("#processing")
     resultData.hide()  
-    drumRoll.show()
+    processing.show()
     $("#resultsMissing").hide()
     $("#resultsPane").show()  
     $.mobile.changePage("#results")  
     window.setTimeout ->
-      drumRoll.fadeOut().promise().done ->
+      processing.fadeOut().promise().done ->
         completeRender = (html) ->
           resultData.empty()
           resultData.append(html)
-          resultData.fadeIn()
+          resultData.fadeIn(200)
         renderFn(result, completeRender, error)
-        '''
-        el = $("<div style='padding:3px;border:1px solid darkgray;'></div>")
-        for key, value of result.model
-          el.append("<div><b>#{key}:</b> #{value}</div>")
-        '''
-    , 100
+    , 200
 
   info = (message, options) ->
     toastr.info message, options

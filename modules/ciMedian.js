@@ -1,6 +1,7 @@
 (function() {
 
   define(function() {
+    var _this = this;
     return {
       name: 'ConfidenceInterval',
       group: 'Continuous Variables',
@@ -36,23 +37,6 @@
             value: '95'
           }
         }
-      },
-      render: function(result, callback, error) {
-        var el, grid, heading;
-        el = $("<div></div>");
-        heading = "<h3>Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize + "</h3>";
-        el.append(heading);
-        grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray;'></div>");
-        grid.append("<div class='ui-block-a' style='background:lightgray'>Method</div>");
-        grid.append("<div class='ui-block-b' style='background:lightgray'>Lower Limit</div>");
-        grid.append("<div class='ui-block-c' style='background:lightgray'>Rank</div>");
-        grid.append("<div class='ui-block-d' style='background:lightgray'>Upper Limit</div>");
-        grid.append("<div class='ui-block-a'>Normal Approximation</div>");
-        grid.append("<div class='ui-block-b'>" + result.lowerLimit + "</div>");
-        grid.append("<div class='ui-block-c'>" + result.rank + "</div>");
-        grid.append("<div class='ui-block-d'>" + result.upperLimit + "</div>");
-        el.append(grid);
-        return callback(el);
       },
       calculate: function(model, callback, error) {
         var cscrit, ll, median, n, np, p, pt, resultModel, ul, z;
@@ -168,6 +152,7 @@
         }
         resultModel = {
           model: model,
+          fields: this.inputFields,
           n: n,
           median: median,
           pt: pt,
@@ -178,6 +163,31 @@
           upperLimit: ul
         };
         return callback(resultModel);
+      },
+      render: function(result, callback, error) {
+        var el, grid, heading, inputs, key, value, _ref;
+        el = $("<div style='text-align:center'></div>");
+        heading = "<h3>Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize + "</h3>";
+        el.append(heading);
+        grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray; background: #ffffff;'></div>");
+        grid.append("<div class='ui-block-a' style='background:lightgray'>Method</div>");
+        grid.append("<div class='ui-block-b' style='background:lightgray'>Lower Limit</div>");
+        grid.append("<div class='ui-block-c' style='background:lightgray'>Rank</div>");
+        grid.append("<div class='ui-block-d' style='background:lightgray'>Upper Limit</div>");
+        grid.append("<div class='ui-block-a'>Normal Approximation</div>");
+        grid.append("<div class='ui-block-b'>" + result.lowerLimit + "</div>");
+        grid.append("<div class='ui-block-c'>" + result.rank + "</div>");
+        grid.append("<div class='ui-block-d'>" + result.upperLimit + "</div>");
+        el.append(grid);
+        el.append("<h4>Input Data</h4>");
+        inputs = $("<div id='#inputs' data-role='collapsible' data-collapsed='true' style='background:#fcfcfc; padding:3px;border:1px solid darkgray;'></div>");
+        _ref = result.model;
+        for (key in _ref) {
+          value = _ref[key];
+          inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;'><b>" + result.fields[key].label + ":</b></span><span style='display:table-cell;'>" + value + "</span></div>");
+        }
+        el.append(inputs);
+        return callback(el);
       }
     };
   });
