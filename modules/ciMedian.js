@@ -1,6 +1,6 @@
 (function() {
 
-  define(function() {
+  define(['../modules/outputBuilder'], function(outputBuilder) {
     var _this = this;
     return {
       name: 'ConfidenceInterval',
@@ -165,7 +165,13 @@
         return callback(resultModel);
       },
       render: function(result, callback, error) {
-        var el, grid, heading, inputs, key, value, _ref;
+        var builder, el, grid, heading, inputs, key, value, _ref;
+        console.log(outputBuilder);
+        builder = new outputBuilder.OutputBuilder();
+        console.log(builder);
+        builder.heading("Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize).columns(['Method', 'Lower Limit', 'Rank', 'Uppert Limit']).row(['Normal Approximation', result.lowerLimit, result.rank, result.upperLimit]).render(result);
+        callback(builder.el);
+        return null;
         el = $("<div style='text-align:center'></div>");
         heading = "<h3>Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize + "</h3>";
         el.append(heading);

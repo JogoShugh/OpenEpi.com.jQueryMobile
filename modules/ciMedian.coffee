@@ -1,4 +1,4 @@
-define ->
+define ['../modules/outputBuilder'], (outputBuilder) ->
 	name:'ConfidenceInterval',
 	group:'Continuous Variables',
 	title: 'Confidence Interval',
@@ -109,6 +109,21 @@ should be within 1-100%",
 		callback resultModel
 
 	render: (result, callback, error) =>
+		console.log outputBuilder		
+		builder = new outputBuilder.OutputBuilder()
+		console.log builder
+		
+		builder
+			.heading("Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}")
+			.columns(['Method', 'Lower Limit', 'Rank', 'Uppert Limit'])
+			.row(['Normal Approximation', result.lowerLimit, result.rank, result.upperLimit])
+			.render(result)
+
+		callback(builder.el)
+
+		return null
+			
+
 		el = $("<div style='text-align:center'></div>")
 		heading = "<h3>Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}</h3>"
 		el.append(heading)
