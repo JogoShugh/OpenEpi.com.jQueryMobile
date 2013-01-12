@@ -40,16 +40,17 @@ define [
 
     $("#resultsMissing").show()
     $("#resultsPane").hide()
-    modulePage.find('.fields').each ->      
+    modulePage.find('.fields').each ->
       fieldContainer = $(@)
       fieldContainer.empty()
       
+      console.log moduleModel
       model = new moduleModel
-      form = new Backbone.Form(model: model).render()
+      console.log model
+      formModel = new Backbone.Form(model: model)
+      console.log formModel
+      form = formModel.render()
       fieldContainer.html(form.el)
-
-      window.CurrentModule = module
-      window.CurrentModel = model # I know, evil...
 
       # Finallly, rebind the click handler for the "Calculate" button and
       # attach it to the calculate method of the current module
@@ -117,6 +118,7 @@ define [
       item = $(@)
       moduleName = item.attr('data-moduleName')
       item.bind 'click', ->
+        console.log moduleName
         moduleLoad moduleName    
     window.setTimeout ->
       $.mobile.changePage "#home"

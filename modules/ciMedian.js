@@ -1,7 +1,6 @@
 (function() {
 
   define(['../modules/outputBuilder'], function(outputBuilder) {
-    var _this = this;
     return {
       name: 'ConfidenceInterval',
       group: 'Continuous Variables',
@@ -19,6 +18,7 @@
         sampleSize: {
           label: 'Sample Size',
           jqmType: 'textinput',
+          dataType: 'number',
           editorAttrs: {
             value: '100'
           }
@@ -26,6 +26,7 @@
         median: {
           label: 'Desired Percentile',
           jqmType: 'textinput',
+          dataType: 'number',
           editorAttrs: {
             value: '50'
           }
@@ -33,6 +34,7 @@
         confidenceLevel: {
           label: 'Confidence Level (%)',
           jqmType: 'textinput',
+          dataType: 'number',
           editorAttrs: {
             value: '95'
           }
@@ -165,41 +167,13 @@
         return callback(resultModel);
       },
       render: function(result, callback, error) {
-        var builder, el, grid, heading, inputs, key, value, _ref;
-        console.log(outputBuilder);
-        builder = new outputBuilder.OutputBuilder();
-        console.log(builder);
+        var builder;
+        builder = outputBuilder.create();
         builder.heading("Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize).columns(['Method', 'Lower Limit', 'Rank', 'Uppert Limit']).row(['Normal Approximation', result.lowerLimit, result.rank, result.upperLimit]).render(result);
-        callback(builder.el);
-        return null;
-        el = $("<div style='text-align:center'></div>");
-        heading = "<h3>Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize + "</h3>";
-        el.append(heading);
-        grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray; background: #ffffff;'></div>");
-        grid.append("<div class='ui-block-a' style='background:lightgray'>Method</div>");
-        grid.append("<div class='ui-block-b' style='background:lightgray'>Lower Limit</div>");
-        grid.append("<div class='ui-block-c' style='background:lightgray'>Rank</div>");
-        grid.append("<div class='ui-block-d' style='background:lightgray'>Upper Limit</div>");
-        grid.append("<div class='ui-block-a'>Normal Approximation</div>");
-        grid.append("<div class='ui-block-b'>" + result.lowerLimit + "</div>");
-        grid.append("<div class='ui-block-c'>" + result.rank + "</div>");
-        grid.append("<div class='ui-block-d'>" + result.upperLimit + "</div>");
-        el.append(grid);
-        el.append("<h4>Input Data</h4>");
-        inputs = $("<div id='#inputs' data-role='collapsible' data-collapsed='true' style='background:#fcfcfc; padding:3px;border:1px solid darkgray;'></div>");
-        _ref = result.model;
-        for (key in _ref) {
-          value = _ref[key];
-          inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;'><b>" + result.fields[key].label + ":</b></span><span style='display:table-cell;'>" + value + "</span></div>");
-        }
-        el.append(inputs);
-        return callback(el);
+        return callback(builder.el);
       }
     };
   });
-
-  '\ntableGenerationFunc: function () {\n    if (currentObject.OutputCollector != null) {\n        with (currentObject.OutputCollector) {\n            newtable(6, 90);	 //6 columns and 90 pixels per column\n            title("<h3>" + CalcCIMedian.Title + "</h3>");\n            newrow("", "", "span2:c:bold:Input Data");\n            newrow();\n            newrow("", "color#66ffff:span2:r:Sample Size:", "color#ffff99:span1:r:" + n);\n            newrow("", "color#66ffff:span2:r:Desired percentile:", "color#ffff99:span1:r:" + median);\n            newrow("", "color#66ffff:span2:r:Confidence Interval (%):", "color#ffff99:span1:r:" + pt);\n            newrow();\n            line(6); 	//line with 6 columns size\n\n            //tableAsHTML(0);   //Reproduce the input table in the output *************************************;\n\n            newtable(6, 90);\n            title("<h4>Confidence Interval for " + currentObject.Data[1]["E1D0"] + "<SUP>th</SUP>" + " percentile of " + "sample size " + currentObject.Data[1]["E0D0"] + "</h4>");\n            newrow("span2:bold:c:Method:", "span1:bold:c:Lower Limit", "span1:bold:r:  Rank", "span2:c:bold:Upper Limit");\n            newrow("span2:c:Normal Approximation", "span1:c:" + fmtSigFig(ll, 6), "span1:r:" + fmtSigFig(np, 6), "span2:c:" + fmtSigFig(ul, 6)); //6 means 6 digits including decimals;\n\n            line(6);\n            endtable();\n';
-
 
   '\n//The text in the next variables will be inserted into the HTML document that comes up in response to the Exercise link\nCalcCIMedian.Demo = "For non-Normal distribution, the median of the sample or population is preferable to the mean as a measure of location (Rank). Medians are also appropriate in other situations-for example, when measurements are on an ordinal scale. In a dataset of 100 diabetic patients, let\'s assume the median systolic blood pressure is 146 mmHg. Using this module, let\'s calculate 95% confidence interval of median value in the sample." +\n        "<ul>" +\n        "<li>First, enter the sample size (eg. 100), median value (eg. 50), and 95% confidence interval (eg. 95) in respective cells in Open Epi Median program, and click on Calculate. </li>" +\n        "<li>In the new window screen, 95% confidence limits of Median position in the sample are seen as 40 - 61. This result is calculated from the normal approximation method of large sample size theory. </li>" +\n        "<li>Then, after arranging observations (here, the systolic blood pressure) in increasing order, read the corresponding values of systolic blood pressure at 40th and 61th position. They are 95% confidence interval of median systolic blood pressure of the sample. </li>" +\n        "</ul>";\n\nCalcCIMedian.Exercises = "currently not available";\n';
 

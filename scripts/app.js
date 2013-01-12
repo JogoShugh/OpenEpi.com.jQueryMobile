@@ -28,16 +28,18 @@
       $("#resultsMissing").show();
       $("#resultsPane").hide();
       return modulePage.find('.fields').each(function() {
-        var fieldContainer, form, model;
+        var fieldContainer, form, formModel, model;
         fieldContainer = $(this);
         fieldContainer.empty();
+        console.log(moduleModel);
         model = new moduleModel;
-        form = new Backbone.Form({
+        console.log(model);
+        formModel = new Backbone.Form({
           model: model
-        }).render();
+        });
+        console.log(formModel);
+        form = formModel.render();
         fieldContainer.html(form.el);
-        window.CurrentModule = module;
-        window.CurrentModel = model;
         modulePage.find('.calculate').each(function() {
           var command;
           command = $(this);
@@ -118,6 +120,7 @@
         item = $(this);
         moduleName = item.attr('data-moduleName');
         return item.bind('click', function() {
+          console.log(moduleName);
           return moduleLoad(moduleName);
         });
       });

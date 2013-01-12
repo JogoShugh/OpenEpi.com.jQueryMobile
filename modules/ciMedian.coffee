@@ -17,16 +17,19 @@ should be within 1-100%",
 		sampleSize:
 			label: 'Sample Size'
 			jqmType: 'textinput'
+			dataType: 'number'
 			editorAttrs:
 				value: '100'
 		median:
 			label: 'Desired Percentile'
 			jqmType: 'textinput'
+			dataType: 'number'
 			editorAttrs:
 				value: '50'
 		confidenceLevel:
 			label: 'Confidence Level (%)'
 			jqmType: 'textinput'
+			dataType: 'number'
 			editorAttrs:
 				value: '95'
 	 
@@ -108,11 +111,9 @@ should be within 1-100%",
 
 		callback resultModel
 
-	render: (result, callback, error) =>
-		console.log outputBuilder		
-		builder = new outputBuilder.OutputBuilder()
-		console.log builder
-		
+	render: (result, callback, error) ->
+		builder = outputBuilder.create()
+
 		builder
 			.heading("Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}")
 			.columns(['Method', 'Lower Limit', 'Rank', 'Uppert Limit'])
@@ -120,55 +121,6 @@ should be within 1-100%",
 			.render(result)
 
 		callback(builder.el)
-
-		return null
-			
-
-		el = $("<div style='text-align:center'></div>")
-		heading = "<h3>Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}</h3>"
-		el.append(heading)
-		grid = $("<div class='ui-grid-c' style='border: 1px solid lightgray; background: #ffffff;'></div>")
-		grid.append("<div class='ui-block-a' style='background:lightgray'>Method</div>")
-		grid.append("<div class='ui-block-b' style='background:lightgray'>Lower Limit</div>")
-		grid.append("<div class='ui-block-c' style='background:lightgray'>Rank</div>")
-		grid.append("<div class='ui-block-d' style='background:lightgray'>Upper Limit</div>")		
-		grid.append("<div class='ui-block-a'>Normal Approximation</div>")
-		grid.append("<div class='ui-block-b'>#{result.lowerLimit}</div>")
-		grid.append("<div class='ui-block-c'>#{result.rank}</div>")
-		grid.append("<div class='ui-block-d'>#{result.upperLimit}</div>")
-		el.append(grid)
-		el.append("<h4>Input Data</h4>")
-		inputs = $("<div id='#inputs' data-role='collapsible' data-collapsed='true' style='background:#fcfcfc; padding:3px;border:1px solid darkgray;'></div>")
-		for key, value of result.model
-			inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;'><b>#{result.fields[key].label}:</b></span><span style='display:table-cell;'>#{value}</span></div>")
-		el.append(inputs)
-		callback(el)
-'''
-
-        tableGenerationFunc: function () {
-            if (currentObject.OutputCollector != null) {
-                with (currentObject.OutputCollector) {
-                    newtable(6, 90);	 //6 columns and 90 pixels per column
-                    title("<h3>" + CalcCIMedian.Title + "</h3>");
-                    newrow("", "", "span2:c:bold:Input Data");
-                    newrow();
-                    newrow("", "color#66ffff:span2:r:Sample Size:", "color#ffff99:span1:r:" + n);
-                    newrow("", "color#66ffff:span2:r:Desired percentile:", "color#ffff99:span1:r:" + median);
-                    newrow("", "color#66ffff:span2:r:Confidence Interval (%):", "color#ffff99:span1:r:" + pt);
-                    newrow();
-                    line(6); 	//line with 6 columns size
-
-                    //tableAsHTML(0);   //Reproduce the input table in the output *************************************;
-
-                    newtable(6, 90);
-                    title("<h4>Confidence Interval for " + currentObject.Data[1]["E1D0"] + "<SUP>th</SUP>" + " percentile of " + "sample size " + currentObject.Data[1]["E0D0"] + "</h4>");
-                    newrow("span2:bold:c:Method:", "span1:bold:c:Lower Limit", "span1:bold:r:  Rank", "span2:c:bold:Upper Limit");
-                    newrow("span2:c:Normal Approximation", "span1:c:" + fmtSigFig(ll, 6), "span1:r:" + fmtSigFig(np, 6), "span2:c:" + fmtSigFig(ul, 6)); //6 means 6 digits including decimals;
-
-                    line(6);
-                    endtable();
-
-'''
 
 '''
 

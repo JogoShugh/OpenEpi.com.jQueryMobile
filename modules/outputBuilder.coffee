@@ -40,5 +40,6 @@ define ['jquery'], ($) ->
 			@el.append(inputs)
 
 	return {
-		OutputBuilder: OutputBuilder
+		create: ->
+			return new OutputBuilder()
 	}

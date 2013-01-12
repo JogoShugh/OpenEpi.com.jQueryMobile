@@ -7,43 +7,18 @@ define ->
 		numerator:
 			label: 'Numerator'
 			jqmType: 'textinput'
+			dataType: 'number'
 			editorAttrs:
 				value: '10'
 		denominator:
 			label: 'Denominator'
 			jqmType: 'textinput'
+			dataType: 'number'
 			editorAttrs:
 				value: '20'
 					
-	calculate: (model, callback) ->
-		console.log model.numerator
-		console.log model.denominator
+	calculate: (model, callback, error) ->
 		callback(model.numerator / model.denominator)
 
-'''
-	inputFields2:
-	[
-		{
-			id: 'numerator',
-			name:'numerator',
-			label: 'Numerator',
-			required: true,
-			type: 'text',
-			jqmType: 'textinput',
-			minlength: 5,
-			maxlength: 50,
-			defaultValue: '10'
-		}
-		,{
-			id: 'denominator',
-			name: 'denominator',
-			label: 'Denominator',
-			required: true,
-			type: 'text',
-			jqmType: 'textinput',
-			minlength: 5,
-			maxlength: 50,
-			defaultValue: '20'
-		}
-	]
-'''
+	render: (result, callback, error) ->
+		callback("<h4>" + result + "</h4>")

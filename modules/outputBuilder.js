@@ -75,7 +75,9 @@
 
     })();
     return {
-      OutputBuilder: OutputBuilder
+      create: function() {
+        return new OutputBuilder();
+      }
     };
   });
 

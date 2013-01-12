@@ -8,8 +8,7 @@ html(lang='en')
     link(href='content/jquery.mobile-1.2.0.min.css', rel='stylesheet')
     link(href='content/toastr.css', rel='stylesheet')
     link(href='content/app.css', rel='stylesheet')
-    script(src='scripts/require.js', type='text/javascript', data-main='scripts/main')
-
+    script(src='scripts/require.js', type='text/javascript', data-main='scripts/main')    
   body
     div(data-role='page', id='splash')
       div(data-role='content', style='text-align:center;background:#ffffff;')
@@ -26,14 +25,12 @@ html(lang='en')
 
       div(data-role='content')
         div.fields
-        //
-          Same as: <div class="fields"></div>
         fieldset.ui-grid-a
           div.ui-block-a
             a(href='#', data-role='button', data-icon='arrow-r', class='calculate') Calculate
           div.ui-block-b
             a(href='#', data-role='button', data-icon='arrow-u', class='clear') Clear
-
+            
       include moduleFooter
 
     div(data-role='page', id='results')
