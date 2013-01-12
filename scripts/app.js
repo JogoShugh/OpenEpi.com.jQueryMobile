@@ -31,13 +31,10 @@
         var fieldContainer, form, formModel, model;
         fieldContainer = $(this);
         fieldContainer.empty();
-        console.log(moduleModel);
         model = new moduleModel;
-        console.log(model);
         formModel = new Backbone.Form({
           model: model
         });
-        console.log(formModel);
         form = formModel.render();
         fieldContainer.html(form.el);
         modulePage.find('.calculate').each(function() {
@@ -46,7 +43,6 @@
           return command.unbind('click').bind('click', function() {
             var formValue;
             formValue = form.getValue();
-            console.log(formValue);
             return module.calculate(formValue, function(result) {
               return showResult(result, module.render);
             }, error);
@@ -120,7 +116,6 @@
         item = $(this);
         moduleName = item.attr('data-moduleName');
         return item.bind('click', function() {
-          console.log(moduleName);
           return moduleLoad(moduleName);
         });
       });

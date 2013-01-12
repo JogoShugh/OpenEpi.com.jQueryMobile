@@ -44,11 +44,8 @@ define [
       fieldContainer = $(@)
       fieldContainer.empty()
       
-      console.log moduleModel
       model = new moduleModel
-      console.log model
       formModel = new Backbone.Form(model: model)
-      console.log formModel
       form = formModel.render()
       fieldContainer.html(form.el)
 
@@ -58,7 +55,6 @@ define [
         command = $(@)
         command.unbind('click').bind 'click', ->
           formValue = form.getValue()
-          console.log formValue
           module.calculate formValue, (result) ->
             showResult result, module.render
           , error
@@ -118,7 +114,6 @@ define [
       item = $(@)
       moduleName = item.attr('data-moduleName')
       item.bind 'click', ->
-        console.log moduleName
         moduleLoad moduleName    
     window.setTimeout ->
       $.mobile.changePage "#home"
