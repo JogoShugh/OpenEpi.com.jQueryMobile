@@ -1,15 +1,25 @@
 (function() {
 
-  define(['modules', 'templates', 'backbone', 'backbone-forms', 'underscore', 'toastr', 'jquery', 'jquery.mobile', 'jquery.jade'], function(modules, templates, Backbone, bbforms, _, toastr, $, jqm, jade) {
-    var OpenEpiShell, error, info, log, success;
+  define(['modules', 'templates', 'backbone', 'backbone-forms', 'underscore', 'toastr', 'jquery', 'jquery.mobile', 'jquery.jade', 'dateFormat'], function(modules, templates, Backbone, bbforms, _, toastr, $, jqm, jade, dateFormat) {
+    var OpenEpiShell, error, info, log, success, toastOptions;
     log = function(message) {
       return console.log(message);
     };
     info = function(message, options) {
+      options = toastOptions(options);
+      log(options);
       return toastr.info(message, options);
     };
     success = function(message, options) {
+      options = toastOptions(options);
       return toastr.success(message, options);
+    };
+    toastOptions = function(options) {
+      if (!(options != null)) {
+        options = {};
+      }
+      options.positionClass = 'toast-bottom-right';
+      return options;
     };
     error = function(message) {
       toastr.error(message);
@@ -190,7 +200,8 @@
         templateModule = {
           templateName: templateName,
           module: module,
-          formValue: formValue
+          formValue: formValue,
+          dateTime: new Date().format()
         };
         this.templateModules.unshift(templateModule);
         success("Template " + templateName + " added");
@@ -225,7 +236,12 @@
           });
         });
         if (this.templatesListRendered) {
-          return $('#templateModulesList').listview('refresh');
+          try {
+            return $('#templateModulesList').listview('refresh');
+          } catch (ex) {
+            console.log("Error:");
+            return console.log(ex);
+          }
         } else {
           return this.templatesListRendered = true;
         }

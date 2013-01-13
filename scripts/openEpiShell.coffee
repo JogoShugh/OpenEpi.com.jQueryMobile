@@ -7,7 +7,8 @@ define [
     'toastr',
     'jquery',
     'jquery.mobile',
-    'jquery.jade'
+    'jquery.jade',
+    'dateFormat'
 ], 
 (
     modules,
@@ -18,16 +19,26 @@ define [
     toastr,
     $,
     jqm,
-    jade
+    jade,
+    dateFormat
 ) ->
   log = (message) ->
     console.log message
 
   info = (message, options) ->
+    options = toastOptions options
+    log options
     toastr.info message, options
 
   success = (message, options) ->
+    options = toastOptions options  
     toastr.success message, options
+
+  toastOptions = (options) ->
+    if not options? 
+      options = {}
+    options.positionClass = 'toast-bottom-right'
+    return options
 
   error = (message) ->
     toastr.error message
@@ -165,7 +176,7 @@ define [
 
     templatesAdd: (module, formValue) ->
       templateName = $('#templateName').val()
-      templateModule = {templateName: templateName, module: module, formValue: formValue}
+      templateModule = {templateName: templateName, module: module, formValue: formValue, dateTime: new Date().format()}
       @templateModules.unshift templateModule
       success "Template #{templateName} added"
       @templateModulesListRender()
@@ -194,7 +205,11 @@ define [
           @moduleLoad moduleName, formValue
       
       if @templatesListRendered
-        $('#templateModulesList').listview('refresh')
+        try
+          $('#templateModulesList').listview('refresh')
+        catch ex
+          console.log "Error:"
+          console.log ex
       else  
         @templatesListRendered = true
 
