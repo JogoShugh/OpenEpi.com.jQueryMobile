@@ -1,5 +1,5 @@
 (->
-  templateNames = ["input-text", "display-moduleList", "input-textarea"]
+  templateNames = ["input-text", "display-moduleList", "input-textarea", 'display-templatesList', 'display-templatesListItem']
   templateInsaneNames = ("text!../templates/" + name + ".jade" for name in templateNames)
 
   define templateInsaneNames, (args...) ->

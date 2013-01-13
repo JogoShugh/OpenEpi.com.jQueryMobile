@@ -8,12 +8,10 @@
       titleShort: 'Median / %ile CI',
       summary: 'Confidence Interval of median or other percentile for a sample size',
       description: "This module calculates confidence interval around a selected percentile for a sample size given. Entering sample size and desired percentile will calculate 95% confidence interval as a default confidence limit. The user can change the confidence interval by typing in new value. Please note that the selected percentile should be within 1-100%",
-      authors: [
-        {
-          Statistics: 'Minn M. Soe and Kevin M. Sullivan (Emory University)',
-          Interface: 'Andrew G. Dean (EpiInformatics.com), Roger A. Mir, and Joshua Gough (AgileFromTheGroundUp.com)'
-        }
-      ],
+      authors: {
+        Statistics: 'Minn M. Soe and Kevin M. Sullivan (Emory University)',
+        Interface: "Andrew G. Dean (<a href='http://www.EpiInformatics.com' target='_blank'>EpiInformatics.com</a>), Roger A. Mir, and Joshua Gough (<a href='http://www.agilefromthegroundup.com/site/Home.aspx' target='_blank'>AgileFromTheGroundUp.com</a>)"
+      },
       inputFields: {
         sampleSize: {
           label: 'Sample Size',

@@ -3,7 +3,7 @@
 
   (function() {
     var name, templateInsaneNames, templateNames;
-    templateNames = ["input-text", "display-moduleList", "input-textarea"];
+    templateNames = ["input-text", "display-moduleList", "input-textarea", 'display-templatesList', 'display-templatesListItem'];
     templateInsaneNames = (function() {
       var _i, _len, _results;
       _results = [];

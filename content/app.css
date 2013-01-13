@@ -46,17 +46,44 @@ body
   text-decoration:none;
 }
 
-#popupPanel-popup {
+.recentModule {
+  padding: 5px;
+}
+
+.recentModule a {
+  text-decoration: none;
+}
+
+#more-popup {
     right: 0 !important;
     left: auto !important;
 }
-#popupPanel {
+
+#more {
     width: 200px;
     border: 1px solid #000;
     border-right: none;
     background: rgba(0,0,0,.5);
     margin: -1px 0;
 }
-#popupPanel .ui-btn {
+
+#more .ui-btn {
+    margin: 2em 15px;
+}
+
+#moreModule-popup {
+    right: 0 !important;
+    left: auto !important;
+}
+
+#moreModule {
+    width: 200px;
+    border: 1px solid #000;
+    border-right: none;
+    background: rgba(0,0,0,.5);
+    margin: -1px 0;
+}
+
+#moreModule .ui-btn {
     margin: 2em 15px;
 }

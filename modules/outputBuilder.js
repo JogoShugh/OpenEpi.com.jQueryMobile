@@ -29,6 +29,9 @@
         return this;
       };
 
+      '<div data-role="collapsible" data-content-theme="c">\n   <h3>Header</h3>\n   <p>I\'m the collapsible content with a themed content block set to "c".</p>\n</div>';
+
+
       OutputBuilder.prototype.columns = function(columns) {
         this._columns = columns;
         return this;
@@ -40,16 +43,17 @@
       };
 
       OutputBuilder.prototype.render = function(result) {
-        var grid, i, inputs, item, j, key, klass, row, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
-        this.el = $("<div style='text-align:center'></div>");
-        this.el.append(this._head);
+        var grid, i, inputs, item, j, key, klass, row, section, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+        this.el = $("<div></div>");
         klass = 'ui-grid-' + this._columnCountMap[this._columns.length];
-        grid = $("<div class='" + klass + "' style='border: 1px solid lightgray; background: #ffffff;'></div>");
+        section = $("<div data-role='collapsible' data-collapsed='false' data-theme='b' data-content-theme='d'></div>");
+        section.append(this._head);
+        grid = $("<div class='" + klass + "'></div>");
         _ref = this._columns;
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           value = _ref[i];
           klass = this._rowCountMap[i];
-          grid.append("<div class='ui-block-" + klass + "' style='background:lightgray'>" + value + "</div>");
+          grid.append("<span class='ui-block-" + klass + "' style='background:lightgray;'>" + value + "</span>");
         }
         _ref1 = this._rows;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -57,18 +61,21 @@
           for (j = _k = 0, _len2 = row.length; _k < _len2; j = ++_k) {
             item = row[j];
             klass = this._rowCountMap[j];
-            grid.append("<div class='ui-block-" + klass + "'>" + item + "</div>");
+            grid.append("<span class='ui-block-" + klass + "' style='color:#333333;'>" + item + "</span>");
           }
         }
-        this.el.append(grid);
-        this.el.append("<h4>Input Data</h4>");
-        inputs = $("<div id='#inputs' data-role='collapsible' data-collapsed='true' style='background:#fcfcfc; padding:3px;border:1px solid darkgray;'></div>");
+        section.append(grid);
+        this.el.append(section);
+        inputs = $("<div id='#inputs' data-role='collapsible' data-theme='d' data-content-theme='e'></div>");
+        inputs.append("<h3>Input Data</h3>");
         _ref2 = result.model;
         for (key in _ref2) {
           value = _ref2[key];
-          inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;'><b>" + result.fields[key].label + ":</b></span><span style='display:table-cell;'>" + value + "</span></div>");
+          inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;color:#333333;'><b>" + result.fields[key].label + ":&nbsp;</b></span><span style='display:table-cell;text-align:right;'>" + value + "</span></div>");
         }
-        return this.el.append(inputs);
+        this.el.append(inputs);
+        section.collapsible();
+        return inputs.collapsible();
       };
 
       return OutputBuilder;
