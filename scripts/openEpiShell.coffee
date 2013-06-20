@@ -22,33 +22,29 @@ define [
     jade,
     dateFormat
 ) ->
+
   log = (message) ->
     console.log message
 
   info = (message, options) ->
-    options = toastOptions options
-    log options
     toastr.info message, options
 
   success = (message, options) ->
-    options = toastOptions options  
     toastr.success message, options
-
-  toastOptions = (options) ->
-    if not options? 
-      options = {}
-    options.positionClass = 'toast-bottom-right'
-    return options
 
   error = (message) ->
     toastr.error message
     console.log 'OpenEpi Error:' + message
 
   class OpenEpiShell
-    constructor: ->
+    constructor: ->    
       @moduleModels = {}
-      @templateModules = []
+      @templateModules = @getTemplatesModules()
       @templatesListRendered = false
+      @historyList = @getHistoryList()
+      @historyListRendered = false
+
+      toastr.options = positionClass : 'toast-bottom-right'
 
       $ =>
         h = $(window).height()
@@ -74,7 +70,7 @@ define [
         , 1750
 
     renderModuleLinks: ->
-      info "Loaded all modules successfully...", {timeOut:1000}
+      info "Loaded all modules successfully..."
       moduleSelector = $("#moduleSelector")
       tmpl = templates['display-moduleList']
       mods = modules : modules
@@ -86,6 +82,24 @@ define [
         moduleName = item.attr('data-moduleName')
         item.bind 'click', =>
           that.moduleLoad moduleName
+
+      @templateModulesListRender()
+      @historyListRender()
+
+    exec: (moduleName, args, addToHistory) ->
+      module = @getModule moduleName
+      callback = (result) =>
+        console.log result
+        if addToHistory
+          @historyAdd module, result.model, result
+
+      error = (err) ->
+        console.log 'Error:'
+        console.log err
+      if not module?
+        error "Could not find module named: #{moduleName}"
+        return
+      module.calculate args, callback, error
 
     moduleLoad: (moduleName, formValue) ->
       modulePage = $("#module")
@@ -120,6 +134,7 @@ define [
             $.mobile.loading('show')
             module.calculate formValue, (result) =>
               @showResult result, module.render
+              @historyAdd module, formValue, result
               $.mobile.loading('hide')
             , @error
 
@@ -140,7 +155,8 @@ define [
         $("#moduleInfo").collapsible()
 
         $.mobile.changePage("#module")
-        modulePage.trigger('create'); # enhance the controls, JQM style
+        modulePage.trigger('create') # enhance the controls, JQM style
+        $('#history').trigger('create')
 
     getModule: (moduleName) ->
       module = modules[moduleName]
@@ -174,10 +190,17 @@ define [
           renderFn(result, completeRender, error)
       , 200
 
+    getTemplatesModules: () ->
+      if window.localStorage.getItem('templateModules') == null
+        window.localStorage.setItem('templateModules', JSON.stringify [])
+      templateModules = JSON.parse window.localStorage.getItem('templateModules')
+      return templateModules
+
     templatesAdd: (module, formValue) ->
       templateName = $('#templateName').val()
-      templateModule = {templateName: templateName, module: module, formValue: formValue, dateTime: new Date().format()}
+      templateModule = {templateName: templateName, moduleName: module.name, formValue: formValue, dateTime: new Date().format()}
       @templateModules.unshift templateModule
+      window.localStorage.setItem('templateModules', JSON.stringify @templateModules)
       success "Template #{templateName} added"
       @templateModulesListRender()
 
@@ -190,7 +213,13 @@ define [
       
       $('#templateModulesList').empty()
       
-      mods = templateModules : @templateModules
+      modObjs = {}
+      $.extend true, modObjs, @templateModules
+      mods = templateModules : modObjs
+      log mods
+      _.each mods.templateModules, (item) =>
+        item.module = @getModule item.moduleName
+
       tmplItems = templates['display-templatesListItem']
       items = $.jade(tmplItems, mods)
       $('#templateModulesList').append(items)
@@ -199,7 +228,7 @@ define [
         item = $(el)
         index = Number(item.attr('data-index'))
         templateModule = @templateModules[index]
-        moduleName = templateModule.module.name
+        moduleName = templateModule.moduleName
         formValue = templateModule.formValue 
         item.bind 'click', =>
           @moduleLoad moduleName, formValue
@@ -212,5 +241,67 @@ define [
           console.log ex
       else  
         @templatesListRendered = true
+
+      return
+
+    getHistoryList: ->
+      if window.localStorage.getItem('historyList') == null
+        window.localStorage.setItem('historyList', JSON.stringify [])
+      histList = JSON.parse window.localStorage.getItem('historyList')
+      return histList
+
+    historyAdd: (module, formValue, result) ->
+      historyItem = 
+        moduleName: module.name
+        result:
+          model: formValue # TODO TEMP HACK
+          output: result.output
+        dateTime: new Date().format()        
+      @historyList.unshift historyItem
+      window.localStorage.setItem('historyList', JSON.stringify @historyList)
+      @historyListRender()
+
+    historyListRender: ->
+      historyItemsSelector = $("#historyListContainer")
+      if @historyListRendered == false
+        tmpl = templates['display-historyList']
+        html = $.jade(tmpl, {})
+        historyItemsSelector.append(html)      
+      $('#historyList').empty()
+
+      modObjs = {}
+      $.extend true, modObjs, @historyList
+      mods = historyList : modObjs
+      log mods
+      _.each mods.historyList, (item) =>
+        module = @getModule item.moduleName
+        item.module = module
+        module.renderHistoryLabel item.result, (result) ->
+          item.label = result
+        module.renderHistoryResult item.result, (result) ->
+          item.result = result
+
+      tmplItems = templates['display-historyListItem']
+      items = $.jade(tmplItems, mods)
+      $('#historyList').append(items)
+      
+      $('.historyItem').children('a').each (i, el) =>
+        item = $(el)
+        index = Number(item.attr('data-index'))
+        historyItem = @historyList[index]
+        moduleName = historyItem.moduleName
+        formValue = historyItem.result.model
+        item.bind 'click', =>
+          @moduleLoad moduleName, formValue
+      try
+        if @historyListRendered == true
+          $('#historyList').listview('refresh')
+        else
+          #$('#historyList').listview()
+          $('#historyList').listview('refresh')          
+      catch ex
+          console.log "Error listviewifying the list:"
+          console.log ex
+      @historyListRendered = true
 
   return OpenEpiShell

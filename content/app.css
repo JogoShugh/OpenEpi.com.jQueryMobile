@@ -87,3 +87,8 @@ body
 #moreModule .ui-btn {
     margin: 2em 15px;
 }
+
+.control-label {
+  font-weight: bold;
+  color: #333333;
+}

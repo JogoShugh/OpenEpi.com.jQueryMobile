@@ -1,20 +1,36 @@
-app = angular.module('OpenEpi', ['ui.bootstrap'])
+require.config({
+  baseUrl: '/app/js',
+  paths: {
+    'angular': '/app/lib/angular/angular',
+    'angular-resource': '/app/lib/angular/angular-resource',
+    'angular-twitter-bootstrap': '/app/lib/angular/ui-bootstrap-tpls-0.3.0'
+  },
+  shim: {
+    'angular': {
+      exports: 'angular'
+    },
+    'angular-resource': {
+      deps: ['angular']
+    },
+    'angular-twitter-bootstrap': {
+      deps: ['angular']
+    }
+    'underscore': {
+      exports: '_'
+    }
+  }
+})
 
-app.config ['$routeProvider', ($routeProvider) ->
-  $routeProvider.when('/', {templateUrl: 'partials/modules.html', controller: 'ModulesController'})  
-  $routeProvider.otherwise({redirectTo: '/'})
-]
+require ['openEpi'], (openEpi) ->
+  window.openEpi = openEpi
+  window.oe = (moduleName, args) ->
+    window.openEpi.exec moduleName, args
 
-app.controller 'ModulesController', ['$rootScope', '$scope', '$location',
-($rootScope, $scope, $location) ->
-  $scope.modules = [
-    name: 'Test 1'
-    titleShort: 'Test 1 module'
-  ,
-    name: 'Test 2'
-    titleShort: 'Test 2 module'
-  ]
+  ''' todo:
+  window.oe = (moduleName, args) ->
+    window.openEpi.exec moduleName, args, window.oe.addToHistory
+  window.oe.addToHistory = false
+  '''
 
-  $scope.moduleLoad = (moduleName) ->
-    alert "Loading #{moduleName}"
-]
+
+

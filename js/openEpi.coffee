@@ -1,4 +1,4 @@
-define 'openEpi', ['angular'], ->
+define 'openEpi', ['modules', 'angular', 'angular-twitter-bootstrap'], (modules) ->
   openEpi = angular.module('openEpi', ['ui.bootstrap'])
 
   openEpi.config ['$routeProvider', ($routeProvider) ->
@@ -20,23 +20,39 @@ define 'openEpi', ['angular'], ->
         alert "Loading #{moduleName}"
   ]
 
-  openEpi.exec = (moduleName, args) ->
-    alert 'executing: ' + moduleName + " with: " + args
-    '''
-    module = @getModule moduleName
-    callback = (result) =>
-      console.log result
-      if addToHistory
-        @historyAdd module, result.model, result
+  onError = (message) ->
+    console.log 'Error: '
+    console.log message
 
-    error = (err) ->
-      console.log 'Error:'
-      console.log err
+  getModule = (moduleName) ->
+    module = modules[moduleName]
     if not module?
-      error "Could not find module named: #{moduleName}"
-    return
-    module.calculate args, callback, error
-    '''
+      onError "Could not find module #{moduleName}"
+      return null
+    return module
+
+  console.log modules
+
+  '''
+    getModuleModel: (module) ->
+      moduleModel = @moduleModels[module.name]
+      if not moduleModel?
+        moduleModel = Backbone.Model.extend(schema: module.inputFields)
+        @moduleModels[module.name] = moduleModel
+    return moduleModel
+  '''
+
+  openEpi.exec = (moduleName, args) ->
+    module = getModule moduleName
+    callback = (result) ->
+      console.log 'Result: '
+      console.dir result
+    if not module?
+      onError "Could not find module named: #{moduleName}"
+      return
+    console.log 'calculating:' + module
+    module.calculate args, callback, onError
+
   return openEpi
 
 

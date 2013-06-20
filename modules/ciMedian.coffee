@@ -15,18 +15,21 @@ should be within 1-100%",
 	inputFields: 
 		sampleSize:
 			label: 'Sample Size'
+			labelSm: 's'
 			jqmType: 'textinput'
 			dataType: 'number'
 			editorAttrs:
 				value: '100'
 		median:
 			label: 'Desired Percentile'
+			labelSm: 'm'
 			jqmType: 'textinput'
 			dataType: 'number'
 			editorAttrs:
 				value: '50'
 		confidenceLevel:
 			label: 'Confidence Level (%)'
+			labelSm: 'cl'
 			jqmType: 'textinput'
 			dataType: 'number'
 			editorAttrs:
@@ -104,9 +107,10 @@ should be within 1-100%",
 			pt: pt
 			confidenceIntervalCategory: pt
 			sampleSize: n
-			lowerLimit: ll
-			rank: np
-			upperLimit: ul
+			output: 
+				lowerLimit: ll
+				rank: np
+				upperLimit: ul
 
 		callback resultModel
 
@@ -116,11 +120,24 @@ should be within 1-100%",
 		builder
 			.heading("Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}")
 			.columns(['Method', 'Lower Limit', 'Rank', 'Uppert Limit'])
-			.row(['Normal Approximation', result.lowerLimit, result.rank, result.upperLimit])
+			.row(['Normal Approximation', result.output.lowerLimit, result.output.rank, result.output.upperLimit])
 			.render(result)
 
 		callback(builder.el)
 
+	renderHistoryLabel: (result, callback, error) ->
+		sampleSize = @.inputFields.sampleSize.labelSm
+		median = @.inputFields.median.labelSm
+		conf = @.inputFields.confidenceLevel.labelSm
+		label = "#{sampleSize}:#{result.model.sampleSize} #{median}:#{result.model.median} #{conf}:#{result.model.confidenceLevel}"
+		callback label
+
+	renderHistoryResult: (result, callback, error) ->
+		ll = result.output.lowerLimit
+		np = result.output.rank
+		ul = result.output.upperLimit
+		label = "ll:#{ll} np:#{np} ul:#{ul}"
+		callback label		
 '''
 
 //The text in the next variables will be inserted into the HTML document that comes up in response to the Exercise link
