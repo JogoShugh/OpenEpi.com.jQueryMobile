@@ -2,8 +2,21 @@
 (function() {
 
   define('openEpi', ['modules', 'angular', 'angular-twitter-bootstrap'], function(modules) {
-    var clearInputModel, getModule, makeInputModel, onError, openEpi;
+    var getModule, onError, openEpi;
     openEpi = angular.module('openEpi', ['ui.bootstrap']);
+    onError = function(message) {
+      console.log('Error: ');
+      return console.log(message);
+    };
+    getModule = function(moduleName) {
+      var module;
+      module = modules.getModule(moduleName);
+      if (!(module != null)) {
+        error("Could not find module named " + moduleName);
+        return null;
+      }
+      return module;
+    };
     openEpi.config([
       '$routeProvider', function($routeProvider) {
         $routeProvider.when('/', {
@@ -25,7 +38,7 @@
         $scope.moduleLoad = function(moduleName) {
           return $location.path('/module/' + moduleName);
         };
-        $scope.moduleMatches = function(module, filterTerm) {
+        $scope.moduleFilter = function(module, filterTerm) {
           var tag, _i, _len, _ref;
           if (!(filterTerm != null)) {
             return true;
@@ -52,78 +65,34 @@
     ]);
     openEpi.controller('ModuleController', [
       '$rootScope', '$scope', '$routeParams', '$location', function($rootScope, $scope, $routeParams, $location) {
-        var callback, module;
+        var module;
         module = getModule($routeParams.moduleName);
+        module.resetInputModel();
         $scope.module = module;
         $scope.hasResult = false;
         $scope.result = {
           resultPaneActive: false
         };
-        makeInputModel($scope, module);
-        callback = function(result) {
-          console.log(module);
-          return module.renderData(result, function(data) {
-            $scope.hasResult = true;
-            $scope.result = data;
-            return $scope.result.resultPaneActive = true;
-          });
+        $scope.getDefaultValue = function(field) {
+          if (field.defaultValue != null) {
+            return field.defaultValue;
+          }
+          return '';
         };
         $scope.calculate = function() {
-          return module.calculate(module.model, callback, onError);
+          return module.calculate(module.model, onError, function(result) {
+            return module.renderData(result, function(data) {
+              $scope.hasResult = true;
+              $scope.result = data;
+              return $scope.result.resultPaneActive = true;
+            });
+          });
         };
         return $scope.clear = function() {
-          return clearInputModel($scope, module);
+          return module.resetInputModel();
         };
       }
     ]);
-    onError = function(message) {
-      console.log('Error: ');
-      return console.log(message);
-    };
-    getModule = function(moduleName) {
-      var module;
-      module = modules[moduleName];
-      if (!(module != null)) {
-        onError("Could not find module " + moduleName);
-        return null;
-      }
-      return module;
-    };
-    makeInputModel = function($scope, module) {
-      var key, model, _i, _len, _ref;
-      if (module.model != null) {
-        delete module.model;
-      }
-      model = {};
-      _ref = module.inputFields;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        key = _ref[_i];
-        model[key] = '';
-      }
-      module.model = model;
-      window.openEpi.model = model;
-      return window.openEpi.model.set = function(name, value) {
-        module.model[name] = value;
-        return $scope.$digest();
-      };
-    };
-    clearInputModel = function($scope, module) {
-      return makeInputModel($scope, module);
-    };
-    openEpi.exec = function(moduleName, args) {
-      var callback, module;
-      module = getModule(moduleName);
-      callback = function(result) {
-        console.log('Result: ');
-        return console.dir(result);
-      };
-      if (!(module != null)) {
-        onError("Could not find module named: " + moduleName);
-        return;
-      }
-      console.log('calculating:' + module);
-      return module.calculate(args, callback, onError);
-    };
     angular.bootstrap(document, ['openEpi']);
     return openEpi;
   });

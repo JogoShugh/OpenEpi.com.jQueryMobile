@@ -7,12 +7,11 @@
       tags: ['sample size'],
       title: 'Simple Proportion',
       titleShort: 'Proportion',
-      summary: 'Proportion summary here',
-      description: 'Another not-so-gigantic description that should be longer than the summary. It should even go multiple lines.',
+      summary: 'Confidence limits for a single proportion',
+      description: 'This module provides confidence limits for simple (binomial) proportions. Entering a numerator and denominator produces confidence limits calculated by several different methods. The numerator must be smaller than the denominator and both must be positive numbers.',
       inputFields: {
         numerator: {
           label: 'Numerator',
-          jqmType: 'textinput',
           dataType: 'number',
           editorAttrs: {
             value: '10'
@@ -20,14 +19,13 @@
         },
         denominator: {
           label: 'Denominator',
-          jqmType: 'textinput',
           dataType: 'number',
           editorAttrs: {
             value: '20'
           }
         }
       },
-      calculate: function(model, callback, error) {
+      calculate: function(model, error, callback) {
         return callback(model.numerator / model.denominator);
       },
       render: function(result, callback, error) {

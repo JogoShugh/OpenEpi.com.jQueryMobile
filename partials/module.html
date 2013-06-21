@@ -6,7 +6,7 @@
                 <div class='control-group' ng-repeat='(name, field) in module.inputFields'>
                     <label class='control-label required' for='{{name}}'>{{field.label}}</label>
                     <div class='controls'>
-                        <input ng-model='module.model[name]' class='input-xlarge' required type='text'>
+                        <input ng-model='module.model[name]' class='input-xlarge' required type='text' value='getDefaultValue(module)'>
                     </div>
                 </div>
                 <button class='btn btn-primary' ng-click='calculate()'>Calculate</button>
@@ -41,20 +41,4 @@
             </div>
         </pane>
     </tabs>
-        <!--
-        for value, i in @_columns
-        tr.append("<th>#{value}</th>")
-        for row in @_rows
-        for item, j in row
-        tRow = $('<tr></tr>')
-        tRow.append("<span style='color:#333333;'>#{item}</span>")
-        table.append tRow
-        section.append(grid)
-        @el.append(section)
-        inputs = $("<div id='#inputs' data-role='collapsible' data-inset='false' data-theme='d' data-content-theme='e'></div>")
-        inputs.append("<h3>Input Data</h3>")
-        for key, value of result.model
-        inputs.append("<div style='display:table-row'><span style='display:table-cell;text-align:right;color:#333333;'><b>#{result.fields[key].label}:&nbsp;</b></span><span style='display:table-cell;text-align:right;'>#{value}</span></div>")
-        @el.append(inputs)
-        -->
 </div>
