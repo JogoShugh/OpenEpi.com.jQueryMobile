@@ -1,8 +1,10 @@
 define ->
-	name:'Proportion',
-	group:'Sample Size',
-	title: 'Simple Proportion',
-	titleShort: 'Proportion',
+	name:'Proportion'
+	tags:['sample size']
+	title: 'Simple Proportion'
+	titleShort: 'Proportion'
+	summary: 'Proportion summary here'
+	description: 'Another not-so-gigantic description that should be longer than the summary. It should even go multiple lines.'
 	inputFields: 
 		numerator:
 			label: 'Numerator'

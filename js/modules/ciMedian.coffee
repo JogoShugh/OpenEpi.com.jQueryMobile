@@ -1,6 +1,6 @@
 define ['modules/outputBuilder'], (outputBuilder) ->
 	name:'ConfidenceInterval',
-	group:'Continuous Variables',
+	tags:['continuous variables', 'sample size'],
 	title: 'Confidence Interval',
 	titleShort: 'Median / %ile CI',
 	summary: 'Confidence Interval of median or other percentile for a sample size',
@@ -113,6 +113,14 @@ should be within 1-100%",
 				upperLimit: ul
 
 		callback resultModel
+
+	renderData: (result, callback, error) ->
+		data = {
+			heading: "Confidence Interval for #{result.model.median}th percentile of sample size #{result.model.sampleSize}"
+			columns: ['Method', 'Lower Limit', 'Rank', 'Uppert Limit']
+			rows: [['Normal Approximation', result.output.lowerLimit, result.output.rank, result.output.upperLimit]]
+		}
+		callback data
 
 	render: (result, callback, error) ->
 		builder = outputBuilder.create()

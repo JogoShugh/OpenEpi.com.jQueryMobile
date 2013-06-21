@@ -2,13 +2,17 @@
 (function() {
 
   define('openEpi', ['modules', 'angular', 'angular-twitter-bootstrap'], function(modules) {
-    var getModule, onError, openEpi;
+    var clearInputModel, getModule, makeInputModel, onError, openEpi;
     openEpi = angular.module('openEpi', ['ui.bootstrap']);
     openEpi.config([
       '$routeProvider', function($routeProvider) {
         $routeProvider.when('/', {
           templateUrl: 'partials/modules.html',
           controller: 'ModulesController'
+        });
+        $routeProvider.when('/module/:moduleName', {
+          templateUrl: 'partials/module.html',
+          controller: 'ModuleController'
         });
         return $routeProvider.otherwise({
           redirectTo: '/'
@@ -17,17 +21,58 @@
     ]);
     openEpi.controller('ModulesController', [
       '$rootScope', '$scope', '$location', function($rootScope, $scope, $location) {
-        $scope.modules = [
-          {
-            name: 'Test 1',
-            titleShort: 'Test 1 module'
-          }, {
-            name: 'Test 2',
-            titleShort: 'Test 2 module'
+        $scope.modules = modules;
+        $scope.moduleLoad = function(moduleName) {
+          return $location.path('/module/' + moduleName);
+        };
+        $scope.moduleMatches = function(module, filterTerm) {
+          var tag, _i, _len, _ref;
+          if (!(filterTerm != null)) {
+            return true;
           }
-        ];
-        return $scope.moduleLoad = function(moduleName) {
-          return alert("Loading " + moduleName);
+          if (module.title.toLowerCase().indexOf(filterTerm.toLowerCase()) > -1) {
+            return true;
+          }
+          _ref = module.tags;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            tag = _ref[_i];
+            if (tag.toLowerCase().indexOf(filterTerm.toLowerCase()) > -1) {
+              return true;
+            }
+          }
+          return false;
+        };
+        return $scope.detailsTitle = function(detailsShown) {
+          if (!detailsShown) {
+            return "More Info";
+          }
+          return "Less Info";
+        };
+      }
+    ]);
+    openEpi.controller('ModuleController', [
+      '$rootScope', '$scope', '$routeParams', '$location', function($rootScope, $scope, $routeParams, $location) {
+        var callback, module;
+        module = getModule($routeParams.moduleName);
+        $scope.module = module;
+        $scope.hasResult = false;
+        $scope.result = {
+          resultPaneActive: false
+        };
+        makeInputModel($scope, module);
+        callback = function(result) {
+          console.log(module);
+          return module.renderData(result, function(data) {
+            $scope.hasResult = true;
+            $scope.result = data;
+            return $scope.result.resultPaneActive = true;
+          });
+        };
+        $scope.calculate = function() {
+          return module.calculate(module.model, callback, onError);
+        };
+        return $scope.clear = function() {
+          return clearInputModel($scope, module);
         };
       }
     ]);
@@ -44,9 +89,27 @@
       }
       return module;
     };
-    console.log(modules);
-    'getModuleModel: (module) ->\n  moduleModel = @moduleModels[module.name]\n  if not moduleModel?\n    moduleModel = Backbone.Model.extend(schema: module.inputFields)\n    @moduleModels[module.name] = moduleModel\nreturn moduleModel';
-
+    makeInputModel = function($scope, module) {
+      var key, model, _i, _len, _ref;
+      if (module.model != null) {
+        delete module.model;
+      }
+      model = {};
+      _ref = module.inputFields;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        key = _ref[_i];
+        model[key] = '';
+      }
+      module.model = model;
+      window.openEpi.model = model;
+      return window.openEpi.model.set = function(name, value) {
+        module.model[name] = value;
+        return $scope.$digest();
+      };
+    };
+    clearInputModel = function($scope, module) {
+      return makeInputModel($scope, module);
+    };
     openEpi.exec = function(moduleName, args) {
       var callback, module;
       module = getModule(moduleName);
@@ -61,6 +124,7 @@
       console.log('calculating:' + module);
       return module.calculate(args, callback, onError);
     };
+    angular.bootstrap(document, ['openEpi']);
     return openEpi;
   });
 

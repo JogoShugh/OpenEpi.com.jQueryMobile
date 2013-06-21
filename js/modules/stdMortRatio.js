@@ -4,9 +4,11 @@
   define(["require"], function(require) {
     return {
       name: "StdMortRatio",
-      group: "Counts",
+      tags: ["counts"],
       title: "Standardized Mortality Ratio",
       titleShort: "Std.Mort.Ratio",
+      summary: "Summary info here",
+      description: "Longer description goes here. It should be longer than the summary info, naturally.",
       inputFields: {
         observedNumberOfCases: {
           label: 'Observed number of cases',

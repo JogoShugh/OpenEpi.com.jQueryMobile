@@ -1,9 +1,6 @@
-define ['angular'], (angular) ->
-  $ = angular.element
+define [], ->
 	class OutputBuilder
 		constructor: () ->
-			@_columnCountMap = {2:'a', 3:'b', 4:'c', 5:'d'}
-			@_rowCountMap = {0:'a', 1:'b', 2:'c', 3:'d', 4:'e'}
 			@el = $("")
 			@_head = $("")
 			@_columns = []
@@ -12,13 +9,6 @@ define ['angular'], (angular) ->
 		heading: (text) ->
 			@_head = "<h3>" + text + "</h3>"
 			return @
-		
-		'''
-		<div data-role="collapsible" data-content-theme="c">
-		   <h3>Header</h3>
-		   <p>I'm the collapsible content with a themed content block set to "c".</p>
-		</div>
-		'''
 
 		columns: (columns) ->
 			@_columns = columns
@@ -28,6 +18,13 @@ define ['angular'], (angular) ->
 			@_rows.push(row)
 			return @
 
+    getColumns: ->
+      return @_columns
+
+    getRows: ->
+      return @_rows
+
+    '''
 		render: (result) ->
 			@el = $("<div></div>")
 			klass = 'ui-grid-' + @_columnCountMap[@_columns.length]
@@ -50,6 +47,7 @@ define ['angular'], (angular) ->
 			@el.append(inputs)
 			section.collapsible()
 			inputs.collapsible()
+     '''
 
 	return {
 		create: ->

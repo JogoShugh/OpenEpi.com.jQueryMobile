@@ -4,7 +4,7 @@
   define(['modules/outputBuilder'], function(outputBuilder) {
     return {
       name: 'ConfidenceInterval',
-      group: 'Continuous Variables',
+      tags: ['continuous variables', 'sample size'],
       title: 'Confidence Interval',
       titleShort: 'Median / %ile CI',
       summary: 'Confidence Interval of median or other percentile for a sample size',
@@ -169,6 +169,15 @@
           }
         };
         return callback(resultModel);
+      },
+      renderData: function(result, callback, error) {
+        var data;
+        data = {
+          heading: "Confidence Interval for " + result.model.median + "th percentile of sample size " + result.model.sampleSize,
+          columns: ['Method', 'Lower Limit', 'Rank', 'Uppert Limit'],
+          rows: [['Normal Approximation', result.output.lowerLimit, result.output.rank, result.output.upperLimit]]
+        };
+        return callback(data);
       },
       render: function(result, callback, error) {
         var builder;

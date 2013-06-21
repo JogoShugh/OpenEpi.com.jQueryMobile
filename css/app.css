@@ -1,7 +1,15 @@
 /* app css stylesheet */
 
-body {
-  margin: 10px;
+@media (max-width: 767px) {
+    body {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+}
+
+.content {
+    margin-left: .5em;
+    margin-right: .5em;
 }
 
 .required {
@@ -16,28 +24,41 @@ body {
   vertical-align: middle;
 }
 
+.moduleTitle {
+    margin-bottom: .1em;
+}
+
+.description {
+    padding-top: .5em;
+    color: #666666;
+}
+
+.tag {
+    margin-right: .3em;
+}
+
 @media only screen and (max-width: 800px) {
 
     /* Force table to not be like tables anymore */
-    #no-more-tables table,
-    #no-more-tables thead,
-    #no-more-tables tbody,
-    #no-more-tables th,
-    #no-more-tables td,
-    #no-more-tables tr {
+    .responsiveTable table,
+    .responsiveTable thead,
+    .responsiveTable tbody,
+    .responsiveTable th,
+    .responsiveTable td,
+    .responsiveTable tr {
         display: block;
     }
 
     /* Hide table headers (but not display: none;, for accessibility) */
-    #no-more-tables thead tr {
+    .responsiveTable thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
 
-    #no-more-tables tr { border: 1px solid #ccc; }
+    .responsiveTable tr { border: 1px solid #ccc; }
 
-    #no-more-tables td {
+    .responsiveTable td {
         /* Behave  like a "row" */
         border: none;
         border-bottom: 1px solid #eee;
@@ -47,7 +68,7 @@ body {
         text-align:left;
     }
 
-    #no-more-tables td:before {
+    .responsiveTable td:before {
         /* Now like a table header */
         position: absolute;
         /* Top/left values mimic padding */
@@ -63,5 +84,5 @@ body {
     /*
     Label the data
     */
-    #no-more-tables td:before { content: attr(data-title); }
+    .responsiveTable td:before { content: attr(data-title); }
 }
